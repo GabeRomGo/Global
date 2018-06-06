@@ -1,57 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace UbisoftTechnicalAssestment1
+namespace test
 {
     class Program
     {
         static void Main(string[] args)
         {
-            int i,c = 0;
-            bool j = false;
-            var sb = new StringBuilder(); //Original Array
-            var rsb = new StringBuilder(); //Reversed Array
-            var ssb = new StringBuilder(); //Second number array
-            var bsb = new StringBuilder(); //Bonus for sixth number
-            int[] list = { 6, 5, 32, 0, 26, 16, 23, 12, 77, 58, 4, 67 };
-            int[] revList = new int[list.Length];
-            for (i = 0; i <= list.Length - 1; i++)
-            {                
-                sb.Append(list[i]);
-                revList[(list.Length-1) - i] = list[i];
-                if (i < list.Length - 1) {
-                    sb.Append(",");
-                }
-                if (j == true) {
-                    ssb.Append(list[i]);
-                    ssb.Append(",");
-                    j = false;
-                }else
-                {
-                    j = true;
-                }c++;
-                if (c == 6) {
-                    bsb.Append(((list[i] * list[i]) + 1));
-                    bsb.Append(",");
-                    c = 0;
-                }
+            var filename = args[0];
+            // File contains one number per line
+            dynamic contents;   //Question #1 we can assign a dynamic value and run on try / catch 
+            try{ 
+                contents = File.ReadAllLines(filename);
+            }catch (Exception e){
+                //Fire Exception for unreachable file
             }
+
+            int index = 0; 
             
-            foreach (int value in revList)
+            while (index != contents.Length - 1) 
             {
-                rsb.Append(value);
-                rsb.Append(",");
+                var line = contents[index]; //Question #2 program will crash here since contents is empty there is no value on [index] 
+                int mode = int.Parse(line);
+                if (Int32.TryParse(mode.ToString(), out mode))//Question #4 Wrap the Parse inside an if that validates that the value is a number (continues)
+                {
+                    int factor = 0;
+                    if (mode >= 1) factor = 10;
+                    else if (mode <= -1) factor = 1; //Question #3 when Mode = 0 its not accounted for, only takes >=1 or <=-1
+                    Console.WriteLine("Result = {0}", mode / factor);
+                    index++;
+                }
+                else {
+                    index++; //Question #4 just ignore and increase index to the next line
+                }               
             }
-
-            Console.WriteLine("Original Array: {0}", sb);
-            Console.WriteLine("Reverse Array: {0}", rsb.Remove((rsb.Length - 1), 1));
-            Console.WriteLine("Every Second Number: {0}", ssb.Remove((ssb.Length - 1), 1));
-            Console.WriteLine("Bonus for (Sixth Number*itself) + 1: {0}", bsb.Remove((bsb.Length - 1), 1));
-            Console.ReadLine();
-
         }
     }
 }
+
